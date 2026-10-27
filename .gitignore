@@ -1,0 +1,63 @@
+# EDI / ASP Safety Layer — root gitignore
+# Keeps large datasets, weights, caches, and generated run outputs out of git.
+# Frozen experiment evidence (asp-safety/experiments/*.json + verdict *.md)
+# is intentionally TRACKED — do not add it here.
+
+# --- Large dataset archives (repo root) ---
+v1.0-mini.tgz
+nuScenes-map-expansion-v1.3.zip
+*.tgz
+*.tar.gz
+
+# --- Model weights / checkpoints ---
+*.pth
+ckpt/
+work_dirs*/
+*.whl
+*.egg-info
+*.so
+
+# --- Data dirs (nuScenes extracts, kmeans caches, map tiles) ---
+data/
+*.npy
+*.npz
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+asp-safety/errors.log
+.opencode/
+
+# --- Node  ---
+node_modules/
+.dist/
+
+# --- Generated experiment outputs (bulk, regenerable) ---
+asp-safety/experiments/probe_out/
+asp-safety/experiments/runs/
+asp-safety/experiments/__pycache__/
+
+# --- CARLA server artifacts (server lives outside repo at C:\CARLA) ---
+*.rec
+*.mp4
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.vscode/
+.idea/
+
+# --- Secrets (never commit) ---
+.env
+*.pem
+*.key

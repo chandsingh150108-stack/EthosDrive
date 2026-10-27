@@ -1,0 +1,95 @@
+# ASP Safety Layer - Default Configuration
+
+# Project settings
+project:
+  name: "asp-safety-layer"
+  version: "1.0.0"
+  description: "ASP-based safety layer for autonomous driving"
+
+# Environment settings
+environment:
+  python_version: "3.10"
+  cuda_version: "11.8"
+  pytorch_version: "2.1.0"
+  clingo_version: "5.7.1"
+
+# Paths
+# NOTE (P-20): only sparse_drive.model_path / rules_dir mirror code
+# defaults; models_dir/output_dir are reserved (uncreated), and no
+# loader reads this file yet -- constructor args + code constants win.
+paths:
+  sparse_drive: "./SparseDrive"
+  rules_dir: "./rules"
+  models_dir: "./models"
+  data_dir: "C:/data/sets/nuscenes"
+  output_dir: "./output"
+
+# SparseDrive settings
+# NOTE (DC-5/N-5): the checkpoint is ~986 MB (AGENTS.md's "400 MB" is
+# stale); canonical pins are docs/environment.md + requirements.txt
+# (torch 2.1.0+cu118 / mmcv-full 1.7.2 — upstream spec's 1.13.0+cu116
+# / mmcv 1.7.1 is superseded). clingo_version below is the conda-env
+# pin; the system-Python dev shell reads 5.8.2 (drift logged S13).
+sparse_drive:
+  model_path: "./SparseDrive/ckpt/sparsedrive_stage2.pth"
+  device: "cuda"
+  input_resolution: [256, 704]
+
+# ASP settings
+# NOTE (P-20): timeout_ms/max_violations are aspirational (the checker
+# sets no timeout and counts all violations); rules_file matches the
+# catalog blob entry point.
+asp:
+  rules_file: "./rules/basic.lp"
+  timeout_ms: 100
+  max_violations: 10
+
+# Traffic rules
+# NOTE: speed/3 in the ASP catalog is SQUARED speed (cm/timestep)^2;
+# limits below stay linear and are squared at comparison time
+# (see rules/helpers.lp header). Canonical box layout is
+# [x, y, z, w, l, h, yaw] (same as SparseDrivePlanner).
+rules:
+  enabled:
+    - speed_regulation
+    - lane_discipline
+    - following_behavior
+    - collision_avoidance
+    - traffic_control
+    - right_of_way
+    - turning_rules
+    - overtaking
+    - vru_safety
+    - intersection_behavior
+    - emergency
+    - comfort_quality
+    - predictive_safety
+    - environmental
+    - complex_interactions
+  parameters:
+    # NOTE (P-20): informational mirrors only -- live thresholds are
+    # the .lp defaults (see rules/* + experiments/sweep_verdict.md),
+    # not these values. Kept for documentation.
+    safe_distance: 5.0  # meters
+    speed_limit: 50.0   # km/h
+    following_distance: 3.0  # seconds
+
+# Evaluation settings
+# NOTE (P-20): mini has 10 scenes, not 100; run_calibration.py takes
+# scenes/flags explicitly instead of reading this file.
+evaluation:
+  dataset: "nuscenes"
+  split: "mini"  # mini or full
+  num_scenes: 100
+  metrics:
+    - collision_rate
+    - l2_error
+    - inference_time
+    - violation_detection_rate
+
+# Output settings
+output:
+  save_trajectories: true
+  save_violations: true
+  generate_plots: true
+  verbose: true

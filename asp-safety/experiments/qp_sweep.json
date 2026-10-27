@@ -1,0 +1,139 @@
+{
+  "grid": {
+    "lr": [
+      0.1,
+      0.2,
+      0.4
+    ],
+    "steps": [
+      30,
+      60
+    ],
+    "lane_pull": [
+      0.0,
+      0.05
+    ]
+  },
+  "rows": [
+    {
+      "lr": 0.1,
+      "steps": 30,
+      "lane_pull": 0.0,
+      "fixed": 1,
+      "unsafe": 8,
+      "fix_rate": 0.125,
+      "l2_improve_mean": 0.7283245059511572,
+      "ms_mean": 249.54363749566255
+    },
+    {
+      "lr": 0.1,
+      "steps": 30,
+      "lane_pull": 0.05,
+      "fixed": 1,
+      "unsafe": 8,
+      "fix_rate": 0.125,
+      "l2_improve_mean": 0.806670557005333,
+      "ms_mean": 245.05651249637594
+    },
+    {
+      "lr": 0.1,
+      "steps": 60,
+      "lane_pull": 0.0,
+      "fixed": 1,
+      "unsafe": 8,
+      "fix_rate": 0.125,
+      "l2_improve_mean": 0.7283245059511572,
+      "ms_mean": 232.62847500154749
+    },
+    {
+      "lr": 0.1,
+      "steps": 60,
+      "lane_pull": 0.05,
+      "fixed": 1,
+      "unsafe": 8,
+      "fix_rate": 0.125,
+      "l2_improve_mean": 0.806670557005333,
+      "ms_mean": 230.6119250060874
+    },
+    {
+      "lr": 0.2,
+      "steps": 30,
+      "lane_pull": 0.0,
+      "fixed": 1,
+      "unsafe": 8,
+      "fix_rate": 0.125,
+      "l2_improve_mean": 0.7283245059511572,
+      "ms_mean": 229.512474987132
+    },
+    {
+      "lr": 0.2,
+      "steps": 30,
+      "lane_pull": 0.05,
+      "fixed": 1,
+      "unsafe": 8,
+      "fix_rate": 0.125,
+      "l2_improve_mean": 0.7828946968389658,
+      "ms_mean": 230.13802499917801
+    },
+    {
+      "lr": 0.2,
+      "steps": 60,
+      "lane_pull": 0.0,
+      "fixed": 1,
+      "unsafe": 8,
+      "fix_rate": 0.125,
+      "l2_improve_mean": 0.7283245059511572,
+      "ms_mean": 226.4067875003093
+    },
+    {
+      "lr": 0.2,
+      "steps": 60,
+      "lane_pull": 0.05,
+      "fixed": 1,
+      "unsafe": 8,
+      "fix_rate": 0.125,
+      "l2_improve_mean": 0.7828946968389658,
+      "ms_mean": 228.02477500226814
+    },
+    {
+      "lr": 0.4,
+      "steps": 30,
+      "lane_pull": 0.0,
+      "fixed": 1,
+      "unsafe": 8,
+      "fix_rate": 0.125,
+      "l2_improve_mean": 0.7283245059511572,
+      "ms_mean": 230.6528375047492
+    },
+    {
+      "lr": 0.4,
+      "steps": 30,
+      "lane_pull": 0.05,
+      "fixed": 1,
+      "unsafe": 8,
+      "fix_rate": 0.125,
+      "l2_improve_mean": 0.7622578285972565,
+      "ms_mean": 230.22072500316426
+    },
+    {
+      "lr": 0.4,
+      "steps": 60,
+      "lane_pull": 0.0,
+      "fixed": 1,
+      "unsafe": 8,
+      "fix_rate": 0.125,
+      "l2_improve_mean": 0.7283245059511572,
+      "ms_mean": 244.15191249136114
+    },
+    {
+      "lr": 0.4,
+      "steps": 60,
+      "lane_pull": 0.05,
+      "fixed": 1,
+      "unsafe": 8,
+      "fix_rate": 0.125,
+      "l2_improve_mean": 0.7622578285972565,
+      "ms_mean": 226.95057499367977
+    }
+  ]
+}

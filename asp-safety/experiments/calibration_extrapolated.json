@@ -1,0 +1,40 @@
+{
+  "scenes": 10,
+  "extrapolated": true,
+  "horizon_s": 6,
+  "horizon_steps_pred": 6,
+  "l2_mean": 11.544819903373718,
+  "l2_values": [
+    8.498808860778809,
+    7.88575553894043,
+    4.527536869049072,
+    12.906567573547363,
+    4.1891937255859375,
+    21.469839096069336,
+    12.04232406616211,
+    26.272584915161133,
+    14.764729499816895,
+    2.8908588886260986
+  ],
+  "gt_safe_rate": 0.9,
+  "pred_safe_rate": 0.0,
+  "pred_fixed_rate": 0.9,
+  "gt_rule_counts": {
+    "urban_speed": 4,
+    "speed_limit": 4
+  },
+  "pred_rule_counts": {
+    "lane_keeping": 47,
+    "wrong_way": 2
+  },
+  "pred_rule_counts_measured_Tle3": {
+    "lane_keeping": 27,
+    "wrong_way": 2
+  },
+  "pred_rule_counts_extrapolated_Tge4": {
+    "lane_keeping": 20
+  },
+  "ms_planner_mean": 3592.9271900095046,
+  "ms_checker_mean": 53.97416000778321,
+  "ms_corrector_mean": 562.0277999900281
+}

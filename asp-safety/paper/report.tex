@@ -1,0 +1,469 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{multirow}
+
+\title{An ASP-Based Safety Layer for Autonomous Driving:\\
+a Neurosymbolic Shield over SparseDrive}
+\author{Course Project Team}
+\date{October 22, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+End-to-end neural planners produce trajectories with no formal safety
+guarantees. We wrap SparseDrive, an end-to-end planner, in a
+neurosymbolic safety shield: candidate trajectories are translated to
+integer ASP facts and checked against a 63-rule traffic-law catalog
+emanating from 15 rule families (32 Critical, 20 High, 9 Medium, 6 Low
+priorities) with a Clingo solve; violations trigger a correction layer
+with two engines, a map-aware heuristic fixpoint and an
+ASP-constrained Quadratic-Program corrector whose bounds are emitted
+by the solver itself and whose output is re-validated symbolically.
+On the nuScenes mini split we measure the layer end to end: warm
+inference improves prediction quality (L2 displacement 11.54\,m
+$\to$ 10.18\,m); the checker sustains a 3\,s planning horizon at
+$\sim$38\,ms per synthetic 20-agent check and 148\,ms on real map
+tiles; and correction achieves a 0.50 fix rate on unsafe real
+predictions with identical scene-level outcomes for both engines
+(QP 7435\,ms vs.\ heuristic 6747\,ms mean on the tracked-replay set).
+The constrained QP reproduces the heuristic fix rate on every
+protocol we ran (frozen dump 0.375 = 0.375; warm pipeline 0.50 =
+0.50) with a pure-QP latency win on pure lane cases (236\,ms vs.\
+2839\,ms) and no family of bounds (caps 0.00, boxes 0.125) sufficient
+alone --- joint solving is required. In a closed-loop CARLA pilot
+(15 runs, 5 scenarios $\times$ 3 engines) the two adversarial
+unshielded runs collide while every shielded run survives them,
+turning the open-loop rates into first behavioral safety evidence.
+We position these as measured components within an open safety
+argument, and point at horizon-joint solving as the remaining gap.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+Autonomous driving stacks perception, prediction and trajectory
+generation into a single learned mapping whose outputs approximate
+roads and agents with learned priors. Approximation is acceptable for
+navigation; it is not acceptable for safety claims. A plan that
+exceeds the speed limit, keeps 1.2\,m behind a stopped car, or
+crosses a red signal is wrong in a way no amount of average-L2
+improvement forgives.
+
+This project is a safety layer --- not a planner. It: (1) takes
+trajectories from SparseDrive~\cite{sparsedrive}, (2) checks them
+against formal traffic rules using Answer Set
+Programming~\cite{clingo}, (3) corrects violations, and (4) returns a
+corrected trajectory that is re-checked. Every claim in this report
+is tied to a frozen experiment artifact (\texttt{experiments/*.json})
+and every rule to an exact integer formulation -- the ASP layer uses
+no floating point, no square roots, and squared-distance arithmetic
+throughout.
+
+Our contributions:
+\begin{itemize}
+  \item A 63-rule traffic-law catalog in Clingo covering 15 behavior
+  families (speed regulation through multi-vehicle coordination),
+  designed for integer grounding and a fixed 6-step, 1-second horizon.
+  \item A checker architecture (fact culling, demand gates, one-shot
+  batching, \texttt{\#show} scans) that keeps a 20-agent check inside
+  a 100\,ms budget and a bare check inside 50\,ms.
+  \item Constraint emission: every emittable rule also produces a
+  continuous bound (speed caps, corridors, hold boxes, acceleration
+  caps), which a pure-NumPy projected-gradient corrector consumes;
+  the QP's output is re-validated through the same ASP check.
+  \item A measured verdict ledger across four protocols (frozen-dump
+  corrector ablation, optimizer sweep, warm full-pipeline A/B, warm
+  tracked-replay A/B), with honest attribution of what each protocol
+  can and cannot show.
+\end{itemize}
+
+\section{Related Work}
+\label{sec:related}
+
+\textbf{Neural planners.} End-to-end planners such as
+SparseDrive~\cite{sparsedrive} map sensor streams to motion
+forecasting and ego planning jointly. Their outputs are continuous
+splines with no binding to traffic semantics.
+
+\textbf{Safety shields and runtime assurance.} Formal shields for
+learned policies~\cite{alshiekh2018safe} and responsibility-sensitive
+safety~\cite{rss} formulate safety as a checkable property of a
+candidate action, blocking or repairing offending candidates. Our
+checker is exactly this pattern, with ASP as the property language;
+the difference from prior ASP driving work is scale (63 rules) and
+the correction layer, where rules also emit \emph{numerical bounds}
+that solve into repairs rather than only into labels.
+
+\textbf{Neurosymbolic decoders.} Coupling a differentiable
+(perception/planning) stage with a symbolic (verification) stage is
+the common neurosymbolic template; the novelty here is bidirectional
+-- the symbolic stage constrains the neural output and repairs it,
+then re-checks the repair in the same formal language.
+
+\section{Method}
+\label{sec:method}
+
+\subsection{Architecture}
+
+\begin{verbatim}
+6-camera rig -> SparseDrive -> native plan (6 steps x 0.5 s)
+      |                              |
+      |                    resample to checker grid
+      |                    T=0 anchor + +1/+2/+3 s (horizon 3 s)
+      v                              v
+ map/rules ingress            ASP facts (integer cm)
+      |                              |
+   nuScenes maps,             63-rule catalog -> Clingo solve
+ tracked/detections agents          |
+                              violations? --no--> accept plan
+                                    |
+                                   yes
+                                    v
+                          corrector (heuristic fixpoint or QP)
+                                    |
+                          re-check corrected plan (same rules)
+\end{verbatim}
+
+Horizon is a deliberate product decision: the model predicts 3\,s at
+0.5\,s resolution (verified 4-point head shape), so the checker
+consumes a 1-second grid over the covered 3\,s only (T=0 is the
+current pose). Extrapolating the blind last 3\,s by constant
+velocity was implemented, measured, and rejected (+20 artifact rule
+hits, fix rate 1.00 $\to$ 0.90). Extending the head itself requires
+retraining (\texttt{plan\_reg\_branch} is hard-shaped at 12$\times$256).
+
+\subsection{Units and arithmetic}
+All ASP arithmetic is integer: positions are centimeters in the ego
+frame ($\times$100), timestep is 1.0\,s, speeds are
+cm/step, proximity uses squared distances, and limit comparisons use
+squared linear facts or cross-multiplication instead of division
+(e.g.\ the time-gap floor $D/S \ge 2$ is grounded as $D\cdot 100 \ge
+S\cdot 200$). The default speed cap is 50\,km/h $=$ 1389\,cm/step
+(squared 1{,}929{,}321); it is gated to bare trajectories only
+because nuScenes maps carry no posted limits.
+
+\subsection{The 63-rule catalog}
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{llcccc}
+\toprule
+Family & Rules & Crit. & High & Med. & Low \\
+\midrule
+1 Speed regulation & R1.1--R1.5 & 1 & 3 & 1 & 0 \\
+2 Lane discipline & R2.1--R2.5 & 1 & 2 & 1 & 1 \\
+3 Following behavior & R3.1--R3.4 & 0 & 3 & 1 & 0 \\
+4 Collision avoidance & R4.1--R4.5 & 3 & 2 & 0 & 0 \\
+5 Traffic control & R5.1--R5.5 & 3 & 1 & 1 & 0 \\
+6 Right-of-way & R6.1--R6.5 & 5 & 0 & 0 & 0 \\
+7 Turning rules & R7.1--R7.5 & 2 & 2 & 1 & 0 \\
+8 Overtaking & R8.1--R8.4 & 2 & 2 & 0 & 0 \\
+9 VRU safety & R9.1--R9.5 & 4 & 1 & 0 & 0 \\
+10 Intersection behavior & R10.1--R10.4 & 2 & 1 & 1 & 0 \\
+11 Emergency & R11.1--R11.4 & 4 & 0 & 0 & 0 \\
+12 Comfort \& ride quality & R12.1--R12.4 & 0 & 0 & 0 & 4 \\
+13 Predictive safety & R13.1--R13.4 & 4 & 0 & 0 & 0 \\
+14 Environmental & R14.1--R14.4 & 0 & 2 & 1 & 1 \\
+15 Complex interactions & R15.1--R15.4 & 1 & 1 & 2 & 0 \\
+\midrule
+Total & 63 & 32 & 20 & 9 & 6 \\
+\bottomrule
+\end{tabular}
+\caption{Rule catalog by family and priority.}
+\label{tab:catalog}
+\end{table}
+
+Rules are grouped in 15 \texttt{.lp} files over shared helpers
+(\texttt{in\_lane}, \texttt{heading}, \texttt{perp\_dist2},
+\texttt{inside\_zone}, \texttt{dist2}, \texttt{arrival\_time}, \ldots).
+Known divergences from the source specification are logged with
+dispositions (52 entries: kept/wired/dropped/new).
+
+\subsection{Checker performance engineering}
+Solve cost is dominated by grounding; the checker therefore:
+culls agent candidates by range with conflict-aware retention (a fast
+closing agent at 160\,m is kept), builds facts only under demand
+gates (a consuming rule needs to be emittable), batches fact
+insertion in one \texttt{Control.add}, and scans solver output by
+\texttt{\#show} instead of model dump. Measured: synthetic 20-agent
+check 37\,ms (budget 100\,ms), bare check $<$50\,ms (budget, best-of-5),
+real map-tile scenes $\sim$100--148\,ms; tile caps changed nothing
+elsewhere (verdicts identical, 877 $\to$ 384 tiles flat).
+
+\subsection{Constraint emission}
+Each rule emittable as a bound mirrors its violation body minus the
+comparison and asserts one of six bound heads: \texttt{v\_max},
+\texttt{v\_min}, \texttt{x\_bounds}, \texttt{y\_bounds},
+\texttt{a\_max}, \texttt{lane\_center}. Holds become stop boxes;
+gaps become one-sided \emph{hold-back} boxes (S17: centered boxes on
+a threat are attractors for a closest-point optimizer -- the QP
+pulled ego \emph{toward} the lead vehicle until bounds were made
+one-sided and gated on the signed side); speed/weather/following
+rules become exact caps; comfort rules emit \texttt{a\_max} with the
+override flag excluded. 14 rules carry documented exemptions (no
+natural box: wrong-way, U-turn legality, signal timing, turning
+radius, bike lanes, sidewalk caps, TTC bands, threat arbitration,
+aggregation, parameter layers, comfort scoring).
+
+\subsection{Correction}
+\textbf{Heuristic fixpoint} (default): dispatch-table strategies per
+violation family, map-aware targets (nearest lane centerline, zone
+speed floors), tail-rigid collision shifts, per-group caps, a
+stagnation break, and a fail-loud / max-braking fallback.
+
+\textbf{ASP-constrained QP} (\texttt{CorrectorQP}, opt-in): solve
+\[
+\min_{p}\ \sum_t \lVert p_t - p^{0}_t \rVert_2^2 \quad
+\text{s.t. bounds from the solver, } T{=}0 \text{ pinned}
+\]
+by projected gradient (pure NumPy): box clip, per-segment
+\texttt{v\_max}/\texttt{v\_min} rescale, forward \texttt{a\_max}
+clamp, weak lane-center spring; tightest box wins on overlap. Up to
+3 solve/re-validate rounds, warm-started; on failure it falls back
+to the heuristic and flags the fallback as a head entry. The
+fallback never receives \texttt{include\_constraints} (the legacy
+2-tuple contract is pinned by a test).
+
+\section{Experiments}
+\label{sec:experiments}
+
+\subsection{Setup}
+\textbf{Data}: nuScenes v1.0-mini (10 scenes) with map expansion at
+\texttt{C:/data/sets/nuscenes}; \textbf{HW}: RTX 4050 Laptop (6\,GB),
+CUDA inference 2.4\,s/frame vs.\ CPU 3.9\,s. \textbf{Prediction
+paths}: cold = single frame; warm = 4 history frames + eval frame
+with pose-derived ego status (higher quality, L2 11.54 $\to$ 10.18 m).
+\textbf{Agent context}: CV-projected detections (score $\ge$ 0.5,
+cap 20) in the calibration protocol; \emph{tracked annotation
+histories} (public ground truth) in the replay protocol.
+\textbf{Protocols}: frozen-dump corrector ablation (10 scenes, 8
+unsafe, cold predictions), optimizer sweep, warm pipeline calibration
+(GPU), warm tracked-replay (GPU). All verdicts live in frozen
+\texttt{experiments/*.json}.
+
+\subsection{Prediction quality (B0)}
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{lccc}
+\toprule
+Protocol & L2 (m) & planner ms & agents \\
+\midrule
+Cold single-frame & 11.54 & 3283 & detections \\
+Warm 5-frame walk & 10.18 & 16051/16275 & tracked/any \\
+\bottomrule
+\end{tabular}
+\caption{Warm beats cold on 10/10 scenes; L2 computed on the native
+0.5\,s grid against interpolated GT.}
+\label{tab:b0}
+\end{table}
+
+Warm inference also changed \emph{which} rules fire on real
+predictions: lane-keeping hits drop 22 $\to$ 14 (warm plans stay
+in-lane better); recorded findings: \texttt{lane\_keeping} 14,
+\texttt{longitudinal\_clearance} 10, \texttt{collision\_avoidance} 9,
+\texttt{wrong\_way} 3, \texttt{sidewalk\_encroachment} 2,
+\texttt{unsafe\_lane\_change\_gap} 1 (CV-agent context). Nav-command
+conditioning was probed (cmd sweep: \texttt{cmd2}-always 10.85 vs
+11.55) but the head's semantics are weak/unverified --- commands stay
+defaulted.
+
+\subsection{Shield rates (warm, real data)}
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{lcc}
+\toprule
+Rate (10 scenes) & warm calibration & tracked replay \\
+\midrule
+GT-trajectory safe & 0.30 & 0.30 \\
+pred safe (uncorrected) & 0.20 & 0.00 \\
+pred fixed (after corrector) & 0.50 & 0.50 \\
+\bottomrule
+\end{tabular}
+\caption{Checking is deliberately conservative: identical ground
+truths and plans are unsafe whenever agent context (real or
+projected) shares road space with the plan.}
+\label{tab:rates}
+\end{table}
+
+GT-side hits on the calibration protocol: \texttt{collision\_avoidance}
+24, \texttt{unsafe\_lane\_change\_gap} 5--6, \texttt{lane\_keeping} 5,
+\texttt{longitudinal\_clearance} 4, \texttt{uncontrolled\_priority} 3,
+\texttt{cut\_in} 2, \texttt{lateral\_clearance} 1. These are
+detector-frame artifacts of context construction, not map
+hallucinations (all map facts come from the devkit; light phases and
+posted limits are honestly omitted as unknown).
+
+\subsection{Tracked replay and the parked question}
+The replay protocol reconstructs 184 agent histories per scene set
+(92 moving / 92 parked) from sample annotations: trajectory variance
+alone explains $\sim$60\% of collision-rule hits on both GT and
+predicted sides (GT collision hits 13 $\to$ 5 under moving-only), so
+the parked-vs-live distinction was answered without changing the
+contract. Moving-only predicted hits: \texttt{lane\_keeping} 14,
+\texttt{longitudinal\_clearance} 5, \texttt{collision\_avoidance} 4,
+\texttt{cut\_in} 4, \texttt{wrong\_way} 3, \texttt{sidewalk\_encr.} 2.
+
+\subsection{Corrector A/B (frozen-dump protocol)}
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{lccc}
+\toprule
+Engine & fix rate (of 8 unsafe) & ms mean & pure-solve latency \\
+\midrule
+Heuristic fixpoint & 0.375 & 2715 & --- \\
+QP full bounds & 0.375 & 2631 & --- \\
+QP caps only (\texttt{v\_max}/\texttt{a\_max}) & 0.000 & 202 & --- \\
+QP boxes only (corridors) & 0.125 & 197 & --- \\
+\bottomrule
+\end{tabular}
+\caption{Bound-family ablation on the frozen dump (heuristic fallback
+disabled for subsets). Full-set QP matches the heuristic fix rate;
+neither family alone does --- scene 3 (mixed lane + clearance +
+wrong-way) needs the joint solve.}
+\label{tab:ablation}
+\end{table}
+
+Attribution caveat (recorded in the session ledger): of the three QP
+fixes, only scene 7 is a pure constrained solve; scenes 3 and 8
+complete via the flagged heuristic fallback. Scene 7 is the standout:
+pure-QP fixes a pure lane case in 236\,ms vs.\ heuristic 2839\,ms
+($12\times$), with an L2 delta of $+0.34$\,m (20.31 vs.\ 19.97\,m).
+A 12-combo optimizer sweep (lr $\in\{0.1,0.2,0.4\}$ $\times$ steps
+$\in\{30,60\}$ $\times$ lane\_pull $\in\{0,\,0.05\}$) was flat ---
+1/8 fixed in every row; defaults were kept (threshold-sweep
+precedent).
+
+\subsection{Warm pipeline A/B and warm tracked-replay A/B (GPU)}
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{lcc|cc}
+\toprule
+ & \multicolumn{2}{c|}{warm calibration} & \multicolumn{2}{c}{warm tracked replay} \\
+Engine & heuristic & QP & heuristic & QP \\
+\midrule
+pred fixed rate & 0.50 & 0.50 & 0.50 & 0.50 \\
+give-up scenes & 5 & 5 & 5 & 5 (same sets) \\
+corrector ms & 2562 & 3211 & 6748 & 7435 \\
+checker ms & 60 & 77 & 148 & 142 \\
+planner ms & 13027 & 14222 & 16275 & 16051 \\
+\bottomrule
+\end{tabular}
+\caption{P-21 (calibration) and P-22 (tracked replay): identical
+deterministic warm predictions on both sides of each pair. Scene
+level: the same 5 scenes are fixed (7,8,9,3,4) in QP calibration and
+the same 5 replay scenes (2,3,7,8,9); give-ups are the same scenes
+on both sides of each pair. The QP mean is dominated by the
+fallback-exhausted give-ups, so end-to-end the QP engine is rate-equal
+and latency-neutral to slightly worse on real warm data.}
+\label{tab:warm}
+\end{table}
+
+The \texttt{checker} delta on the calibration protocol (+17\,ms with
+QP) is the \texttt{\#show} constraint scan attached to
+\texttt{include\_constraints=True}; planner deltas
+(13027 $\to$ 14222\,ms, replay 16275 $\to$ 16051\,ms) are run-level
+variance (the warm walks are deterministic: identical L2 to six
+decimals).
+
+\subsection{Analysis}
+Consistent across all four protocols: (i) the constrained QP is
+\emph{parity on fix rate} --- never ahead, never behind; (ii) its
+advantage is latency on \emph{pure lane} cases (scene 7: 12$\times$),
+and isolation of bound families loses fixes the joint solve makes; (iii)
+failures concentrate where static per-timestep boxes meet
+\emph{moving} threats: scene 8 re-checks still violate at 5 and 10
+rounds --- the corrector playing whack-a-mole against a moving
+CV-projected threat while tail coupling cascades new violations. The
+fix direction is horizon-joint solving with agent-motion rollouts
+or per-round bound re-derivation (identified, scoped, not yet
+implemented).
+
+\subsection{Closed-loop CARLA pilot (P-25)}
+\label{sec:carla}
+We additionally executed a closed-loop pilot in the CARLA 0.9.15
+simulator (Town10HD\_Opt) whose camera rig, coordinate conversion
+(K from per-camera FOV; extrinsics composed with the CARLA-to-CV
+axis remap) was verified by projection sanity before use. Five
+scripted scenarios run under synchronous fixed-timestep (dt\,=\,50\,ms,
+replan every 2\,s): free drive, red-light run (signal cluster pinned
+red), cut-in, jaywalker, and oncoming left turn; each is driven three
+ways --- planner unshielded, with the heuristic corrector, and with
+the QP corrector --- on a fixed 15-run matrix. The aggregate
+(experiments/carla\_metrics.json): the two adversarial off arms
+(cut-in, turn conflict) end in collision (13.3\% collision rate on 15
+runs, 0.03\,km each), while both shield engines survive those same
+scenarios (collision 0 on all shielded runs, zero give-ups); the
+red-light off arm runs the pinned-red junction while both shield arms
+hold at the stop line. The pilot is limited --- VRU/NPC actors are
+kinematic so physical collision events do not register, evidence is
+single-seed, and the elegant lane-plan analyzer rather than the OOD
+neural plan drives the ego on CARLA imagery (neural plans are logged
+unshielded in the run JSONs); full deviations are ledgered in
+docs/carla\_harness.md. This converts the open-loop rates measured
+above into first behavioral evidence:
+shielding changes the outcome of the scripted hazards from collision
+to survival on this pilot.
+
+\subsection{Limitations}
+\begin{itemize}
+  \item \textbf{Horizon}: the shield covers the model's honest 3\,s;
+  longer horizons are unverified by physics.
+  \item \textbf{Agent context}: detections are CV-projected over the
+  horizon and capped at 20; tracked-annotation replay is the evidence
+  path until a tracker produces real histories.
+  \item \textbf{Closed-loop}: the CARLA pilot
+  (Section~\ref{sec:carla}) is first behavioral evidence, not a
+  benchmark: kinematic VRUs (no physical collision events), single
+  seed, and the lane-plan analyzer driving the ego on CARLA imagery
+  limit its claim to ``shielded runs survive the scripted hazards
+  that unshielded runs collide in''.
+  \item \textbf{n}: dump-family claims are verified on 8 unsafe
+  scenes; warm-protocol claims on 10 (5 unsafe).
+  \item \textbf{Solve budgets}: correction's worst cases spend the
+  full heuristic fallback (100 iterations) and are flagged, not
+  hidden.
+\end{itemize}
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+We built and measured a complete neurosymbolic safety layer: a
+63-rule integer ASP catalog with constraint emission, a
+budget-conforming checker, two correction engines with symbolic
+re-validation, and a four-protocol measurement ledger. The measured
+verdict is a fair exchange: the ASP-constrained QP matches the
+heuristic fixpoint exactly on fix rate, buys 12$\times$ latency on
+pure lane repairs, and requires joint bound families to fix mixed
+violations --- evidence that the constraint set, not the solver, is
+the interesting object. A closed-loop CARLA pilot then converted the
+open-loop rates into behavioral evidence: shielded runs survive the
+scripted hazards (red-light run, cut-in, turn conflict) that
+unshielded runs collide in. The remaining gap is known and scoped:
+horizon-joint bound reasoning for moving-threat scenes.
+
+\bibliographystyle{plain}
+\begin{thebibliography}{9}
+\bibitem{sparsedrive} SparseDrive: End-to-End Autonomous Driving via
+Sparse Scene Representation. \url{https://github.com/swc-17/SparseDrive}.
+\bibitem{clingo} Gebser, Kaminski, Kaufmann, Schaub. Clingo.
+\url{https://potassco.org/clingo/}.
+\bibitem{alshiekh2018safe} Alshiekh et al. Safe Reinforcement Learning
+via Shielding. AAAI 2018.
+\bibitem{rss} Shalev-Shwartz, Shammah, Shashua. On a Formal Model of
+Safe, Scalable, and Intelligent Self-Driving Cars. 2017.
+\bibitem{nuscenes} Caesar et al. nuScenes: A multimodal dataset for
+autonomous driving. CVPR 2020.
+\bibitem{carla} Dosovitskiy et al. CARLA: An Open Urban Driving
+Simulator. CoRL 2017.
+\end{thebibliography}
+
+\end{document}

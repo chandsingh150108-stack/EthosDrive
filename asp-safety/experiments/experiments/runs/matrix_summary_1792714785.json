@@ -1,0 +1,21 @@
+{
+  "seeds": [
+    2
+  ],
+  "scenarios": [
+    "S1"
+  ],
+  "engines": [
+    "off"
+  ],
+  "results": [
+    {
+      "scenario": "S1",
+      "seed": 2,
+      "engine": "off",
+      "output": "S1_2_off_20261023_054942.json",
+      "status": "completed"
+    }
+  ],
+  "timestamp": 1792714785.0729513
+}

@@ -1,0 +1,359 @@
+{
+  "scenes": 10,
+  "pred_unsafe": 8,
+  "heuristic_fixed_rate": 0.375,
+  "qp_fixed_rate": 0.375,
+  "qp_caps_fixed_rate": 0.0,
+  "qp_boxes_fixed_rate": 0.125,
+  "heuristic_ms_mean": 4710.205959924497,
+  "qp_ms_mean": 4516.661439999007,
+  "qp_caps_ms_mean": 337.07212002482265,
+  "qp_boxes_ms_mean": 359.85697004944086,
+  "rows": [
+    {
+      "scene": 0,
+      "pred_unsafe": true,
+      "l2_before": 6.608119964599609,
+      "pred_rules": [
+        "collision_avoidance",
+        "lane_departure",
+        "lane_keeping",
+        "longitudinal_clearance",
+        "sidewalk_encroachment",
+        "wrong_way"
+      ],
+      "heuristic_fixed": false,
+      "heuristic_ms": 9409.368599997833,
+      "heuristic_l2": null,
+      "heuristic_entries": 0,
+      "heuristic_residual": [
+        "GAVE_UP:Failed to correct trajectory after 100 iterations"
+      ],
+      "qp_fixed": false,
+      "qp_ms": 9640.27229999192,
+      "qp_l2": null,
+      "qp_entries": 0,
+      "qp_residual": [
+        "GAVE_UP:Failed to correct trajectory after 100 iterations"
+      ],
+      "qp_caps_fixed": false,
+      "qp_caps_ms": 421.17300000973046,
+      "qp_caps_l2": null,
+      "qp_caps_entries": 0,
+      "qp_caps_residual": [
+        "GAVE_UP:CorrectorQP failed after 3 constrained rounds (optimal)"
+      ],
+      "qp_boxes_fixed": false,
+      "qp_boxes_ms": 451.55070000328124,
+      "qp_boxes_l2": null,
+      "qp_boxes_entries": 0,
+      "qp_boxes_residual": [
+        "GAVE_UP:CorrectorQP failed after 3 constrained rounds (optimal)"
+      ]
+    },
+    {
+      "scene": 1,
+      "pred_unsafe": true,
+      "l2_before": 5.409309387207031,
+      "pred_rules": [
+        "lane_keeping",
+        "longitudinal_clearance",
+        "wrong_way"
+      ],
+      "heuristic_fixed": false,
+      "heuristic_ms": 879.368299851194,
+      "heuristic_l2": null,
+      "heuristic_entries": 0,
+      "heuristic_residual": [
+        "GAVE_UP:Failed to correct trajectory after 100 iterations"
+      ],
+      "qp_fixed": false,
+      "qp_ms": 1404.7211001161486,
+      "qp_l2": null,
+      "qp_entries": 0,
+      "qp_residual": [
+        "GAVE_UP:Failed to correct trajectory after 100 iterations"
+      ],
+      "qp_caps_fixed": false,
+      "qp_caps_ms": 421.2237000465393,
+      "qp_caps_l2": null,
+      "qp_caps_entries": 0,
+      "qp_caps_residual": [
+        "GAVE_UP:CorrectorQP failed after 3 constrained rounds (optimal)"
+      ],
+      "qp_boxes_fixed": false,
+      "qp_boxes_ms": 477.9050999786705,
+      "qp_boxes_l2": null,
+      "qp_boxes_entries": 0,
+      "qp_boxes_residual": [
+        "GAVE_UP:CorrectorQP failed after 3 constrained rounds (optimal)"
+      ]
+    },
+    {
+      "scene": 2,
+      "pred_unsafe": true,
+      "l2_before": 2.1266608238220215,
+      "pred_rules": [
+        "collision_avoidance",
+        "longitudinal_clearance",
+        "unsafe_lane_change_gap"
+      ],
+      "heuristic_fixed": false,
+      "heuristic_ms": 8042.195899877697,
+      "heuristic_l2": null,
+      "heuristic_entries": 0,
+      "heuristic_residual": [
+        "GAVE_UP:Failed to correct trajectory after 100 iterations"
+      ],
+      "qp_fixed": false,
+      "qp_ms": 8691.040300065652,
+      "qp_l2": null,
+      "qp_entries": 0,
+      "qp_residual": [
+        "GAVE_UP:Failed to correct trajectory after 100 iterations"
+      ],
+      "qp_caps_fixed": false,
+      "qp_caps_ms": 523.6011000815779,
+      "qp_caps_l2": null,
+      "qp_caps_entries": 0,
+      "qp_caps_residual": [
+        "GAVE_UP:CorrectorQP failed after 3 constrained rounds (optimal)"
+      ],
+      "qp_boxes_fixed": false,
+      "qp_boxes_ms": 525.1196001190692,
+      "qp_boxes_l2": null,
+      "qp_boxes_entries": 0,
+      "qp_boxes_residual": [
+        "GAVE_UP:CorrectorQP failed after 3 constrained rounds (optimal)"
+      ]
+    },
+    {
+      "scene": 3,
+      "pred_unsafe": true,
+      "l2_before": 9.704839706420898,
+      "pred_rules": [
+        "lane_departure",
+        "longitudinal_clearance",
+        "wrong_way"
+      ],
+      "heuristic_fixed": true,
+      "heuristic_ms": 420.4333999659866,
+      "heuristic_l2": 11.59133529663086,
+      "heuristic_entries": 3,
+      "heuristic_residual": [],
+      "qp_fixed": true,
+      "qp_ms": 798.6386998090893,
+      "qp_l2": 11.591335427831766,
+      "qp_entries": 4,
+      "qp_residual": [],
+      "qp_caps_fixed": false,
+      "qp_caps_ms": 326.0798000264913,
+      "qp_caps_l2": null,
+      "qp_caps_entries": 0,
+      "qp_caps_residual": [
+        "GAVE_UP:CorrectorQP failed after 3 constrained rounds (optimal)"
+      ],
+      "qp_boxes_fixed": false,
+      "qp_boxes_ms": 348.50439988076687,
+      "qp_boxes_l2": null,
+      "qp_boxes_entries": 0,
+      "qp_boxes_residual": [
+        "GAVE_UP:CorrectorQP failed after 3 constrained rounds (optimal)"
+      ]
+    },
+    {
+      "scene": 4,
+      "pred_unsafe": false,
+      "l2_before": 2.054194927215576,
+      "pred_rules": [],
+      "heuristic_fixed": true,
+      "heuristic_ms": 82.02539989724755,
+      "heuristic_l2": 2.054194927215576,
+      "heuristic_entries": 0,
+      "heuristic_residual": [],
+      "qp_fixed": true,
+      "qp_ms": 105.31290015205741,
+      "qp_l2": 2.0541948573918987,
+      "qp_entries": 0,
+      "qp_residual": [],
+      "qp_caps_fixed": true,
+      "qp_caps_ms": 105.0106999464333,
+      "qp_caps_l2": 2.0541948573918987,
+      "qp_caps_entries": 0,
+      "qp_caps_residual": [],
+      "qp_boxes_fixed": true,
+      "qp_boxes_ms": 94.10790004767478,
+      "qp_boxes_l2": 2.0541948573918987,
+      "qp_boxes_entries": 0,
+      "qp_boxes_residual": []
+    },
+    {
+      "scene": 5,
+      "pred_unsafe": true,
+      "l2_before": 18.243755340576172,
+      "pred_rules": [
+        "lane_departure",
+        "lane_keeping"
+      ],
+      "heuristic_fixed": false,
+      "heuristic_ms": 6657.40459994413,
+      "heuristic_l2": null,
+      "heuristic_entries": 0,
+      "heuristic_residual": [
+        "GAVE_UP:Failed to correct trajectory after 100 iterations"
+      ],
+      "qp_fixed": false,
+      "qp_ms": 7078.773099929094,
+      "qp_l2": null,
+      "qp_entries": 0,
+      "qp_residual": [
+        "GAVE_UP:Failed to correct trajectory after 100 iterations"
+      ],
+      "qp_caps_fixed": false,
+      "qp_caps_ms": 354.6718000434339,
+      "qp_caps_l2": null,
+      "qp_caps_entries": 0,
+      "qp_caps_residual": [
+        "GAVE_UP:CorrectorQP failed after 3 constrained rounds (optimal)"
+      ],
+      "qp_boxes_fixed": false,
+      "qp_boxes_ms": 380.31639996916056,
+      "qp_boxes_l2": null,
+      "qp_boxes_entries": 0,
+      "qp_boxes_residual": [
+        "GAVE_UP:CorrectorQP failed after 3 constrained rounds (optimal)"
+      ]
+    },
+    {
+      "scene": 6,
+      "pred_unsafe": true,
+      "l2_before": 7.644481658935547,
+      "pred_rules": [
+        "collision_avoidance",
+        "lane_keeping",
+        "longitudinal_clearance"
+      ],
+      "heuristic_fixed": false,
+      "heuristic_ms": 10320.727699901909,
+      "heuristic_l2": null,
+      "heuristic_entries": 0,
+      "heuristic_residual": [
+        "GAVE_UP:Failed to correct trajectory after 100 iterations"
+      ],
+      "qp_fixed": false,
+      "qp_ms": 10514.707199996337,
+      "qp_l2": null,
+      "qp_entries": 0,
+      "qp_residual": [
+        "GAVE_UP:Failed to correct trajectory after 100 iterations"
+      ],
+      "qp_caps_fixed": false,
+      "qp_caps_ms": 388.03780009038746,
+      "qp_caps_l2": null,
+      "qp_caps_entries": 0,
+      "qp_caps_residual": [
+        "GAVE_UP:CorrectorQP failed after 3 constrained rounds (optimal)"
+      ],
+      "qp_boxes_fixed": false,
+      "qp_boxes_ms": 395.87320014834404,
+      "qp_boxes_l2": null,
+      "qp_boxes_entries": 0,
+      "qp_boxes_residual": [
+        "GAVE_UP:CorrectorQP failed after 3 constrained rounds (optimal)"
+      ]
+    },
+    {
+      "scene": 7,
+      "pred_unsafe": true,
+      "l2_before": 21.0955810546875,
+      "pred_rules": [
+        "lane_keeping"
+      ],
+      "heuristic_fixed": true,
+      "heuristic_ms": 5035.8390000183135,
+      "heuristic_l2": 19.974445343017578,
+      "heuristic_entries": 53,
+      "heuristic_residual": [],
+      "qp_fixed": true,
+      "qp_ms": 371.6136000584811,
+      "qp_l2": 20.312686357848534,
+      "qp_entries": 3,
+      "qp_residual": [
+        "lane_departure"
+      ],
+      "qp_caps_fixed": false,
+      "qp_caps_ms": 366.96809995919466,
+      "qp_caps_l2": null,
+      "qp_caps_entries": 0,
+      "qp_caps_residual": [
+        "GAVE_UP:CorrectorQP failed after 3 constrained rounds (optimal)"
+      ],
+      "qp_boxes_fixed": true,
+      "qp_boxes_ms": 374.2076000198722,
+      "qp_boxes_l2": 20.119155289500256,
+      "qp_boxes_entries": 3,
+      "qp_boxes_residual": [
+        "lane_departure"
+      ]
+    },
+    {
+      "scene": 8,
+      "pred_unsafe": true,
+      "l2_before": 12.00562572479248,
+      "pred_rules": [
+        "lane_keeping",
+        "longitudinal_clearance"
+      ],
+      "heuristic_fixed": true,
+      "heuristic_ms": 6144.148099934682,
+      "heuristic_l2": 11.639423370361328,
+      "heuristic_entries": 65,
+      "heuristic_residual": [],
+      "qp_fixed": true,
+      "qp_ms": 6441.416299901903,
+      "qp_l2": 11.639422912386902,
+      "qp_entries": 66,
+      "qp_residual": [],
+      "qp_caps_fixed": false,
+      "qp_caps_ms": 360.1232001092285,
+      "qp_caps_l2": null,
+      "qp_caps_entries": 0,
+      "qp_caps_residual": [
+        "GAVE_UP:CorrectorQP failed after 3 constrained rounds (optimal)"
+      ],
+      "qp_boxes_fixed": false,
+      "qp_boxes_ms": 444.67200012877584,
+      "qp_boxes_l2": null,
+      "qp_boxes_entries": 0,
+      "qp_boxes_residual": [
+        "GAVE_UP:CorrectorQP failed after 3 constrained rounds (optimal)"
+      ]
+    },
+    {
+      "scene": 9,
+      "pred_unsafe": false,
+      "l2_before": 2.480052947998047,
+      "pred_rules": [],
+      "heuristic_fixed": true,
+      "heuristic_ms": 110.54859985597432,
+      "heuristic_l2": 2.480052947998047,
+      "heuristic_entries": 0,
+      "heuristic_residual": [],
+      "qp_fixed": true,
+      "qp_ms": 120.11889996938407,
+      "qp_l2": 2.4800527883339543,
+      "qp_entries": 0,
+      "qp_residual": [],
+      "qp_caps_fixed": true,
+      "qp_caps_ms": 103.83199993520975,
+      "qp_caps_l2": 2.4800527883339543,
+      "qp_caps_entries": 0,
+      "qp_caps_residual": [],
+      "qp_boxes_fixed": true,
+      "qp_boxes_ms": 106.31280019879341,
+      "qp_boxes_l2": 2.4800527883339543,
+      "qp_boxes_entries": 0,
+      "qp_boxes_residual": []
+    }
+  ]
+}

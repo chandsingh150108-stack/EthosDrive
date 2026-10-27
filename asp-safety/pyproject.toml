@@ -1,0 +1,20 @@
+# ASP Safety Layer — project metadata (P-10).
+# NOTE: no [tool.pytest] section on purpose. tests/test_all.py resolves
+# 'src'/'rules' relative to CWD and must run from asp-safety/
+# (python tests/test_all.py); constraining testpaths/rootdir would
+# silently break it. Run pytest from asp-safety/; CI runs the
+# Clingo-only files explicitly (see .github/workflows/fast-tests.yml).
+
+[project]
+name = "asp-safety-layer"
+version = "1.0.0"
+description = "ASP-based safety layer for autonomous driving"
+requires-python = ">=3.10"
+dependencies = [
+    "clingo==5.7.1",
+    "numpy==1.26.4",
+    "nuscenes-devkit==1.2.0",
+]
+
+[tool.black]
+line-length = 88

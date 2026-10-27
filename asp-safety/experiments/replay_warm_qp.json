@@ -1,0 +1,70 @@
+{
+  "scenes": 10,
+  "horizon_s": 3,
+  "horizon_steps_pred": 4,
+  "agents": "tracked-annotations",
+  "warm_predictions": true,
+  "corrector_mode": "qp",
+  "n_tracked_total": 184,
+  "n_moving": 92,
+  "n_parked": 92,
+  "l2_mean": 10.18409786653791,
+  "l2_values": [
+    7.784046083039549,
+    6.279495642698056,
+    2.393455360356566,
+    11.410197930952842,
+    2.3091016677162215,
+    21.312601368526096,
+    8.940046443367292,
+    24.654349010596803,
+    13.983637700578099,
+    2.7740474575475793
+  ],
+  "gt_safe_rate": 0.3,
+  "pred_safe_rate": 0.0,
+  "pred_fixed_rate": 0.5,
+  "gt_rule_counts": {
+    "collision_avoidance": 13,
+    "lane_keeping": 5,
+    "uncontrolled_priority": 11,
+    "unsafe_lane_change_gap": 5,
+    "longitudinal_clearance": 7,
+    "cut_in": 14,
+    "lateral_clearance": 1
+  },
+  "gt_rule_counts_moving_only": {
+    "lane_keeping": 5,
+    "uncontrolled_priority": 10,
+    "unsafe_lane_change_gap": 4,
+    "longitudinal_clearance": 2,
+    "collision_avoidance": 5,
+    "cut_in": 9,
+    "lateral_clearance": 1
+  },
+  "pred_rule_counts": {
+    "lane_keeping": 14,
+    "wrong_way": 3,
+    "sidewalk_encroachment": 2,
+    "collision_avoidance": 12,
+    "longitudinal_clearance": 8,
+    "unsafe_lane_change_gap": 2,
+    "uncontrolled_priority": 1,
+    "cut_in": 5,
+    "lateral_clearance": 2
+  },
+  "pred_rule_counts_moving_only": {
+    "lane_keeping": 14,
+    "wrong_way": 3,
+    "sidewalk_encroachment": 2,
+    "longitudinal_clearance": 5,
+    "unsafe_lane_change_gap": 2,
+    "uncontrolled_priority": 1,
+    "collision_avoidance": 4,
+    "cut_in": 4,
+    "lateral_clearance": 1
+  },
+  "ms_planner_mean": 16051.110599935055,
+  "ms_checker_mean": 142.0009799534455,
+  "ms_corrector_mean": 7435.355589911342
+}

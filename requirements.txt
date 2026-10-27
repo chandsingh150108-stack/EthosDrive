@@ -1,0 +1,43 @@
+# ASP Safety Layer - Python Dependencies
+# For use with conda environment 'asp-safety' (Python 3.10)
+# Canonical pins: see asp-safety/docs/environment.md (N-4).
+# Install torch + mmcv-full from their special indexes first (see environment.md),
+# then: pip install -r requirements.txt
+
+# PyTorch with CUDA 11.8 (install from https://download.pytorch.org/whl/cu118 first)
+torch==2.1.0
+torchvision==0.16.0
+torchaudio==2.1.0
+
+# SparseDrive deps (mmcv-full from https://download.openmmlab.com/mmcv/dist/cu118/torch2.1.0/)
+mmcv-full==1.7.2
+mmdet==2.28.2
+einops==0.8.2
+prettytable
+motmetrics
+ipython
+
+# ASP Solver
+clingo==5.7.1
+
+# nuScenes
+nuscenes-devkit==1.2.0
+
+# Closed-loop simulator client (server external at C:\CARLA)
+carla==0.9.15
+
+# Scientific computing
+numpy==1.26.4
+setuptools==75.8.0
+opencv-python==4.8.1.78
+scipy>=1.10.0
+pandas>=2.0.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+PyYAML>=6.0.0
+
+# Development tools
+pytest>=7.3.0
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.4.0

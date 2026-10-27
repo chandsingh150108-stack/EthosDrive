@@ -1,0 +1,637 @@
+[
+  {
+    "param": "baseline",
+    "value": "-",
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 3,
+      "longitudinal_clearance": 3,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 10,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "bubble_5m",
+    "value": 90000,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 3,
+      "longitudinal_clearance": 3,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 10,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "bubble_5m",
+    "value": 160000,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 3,
+      "longitudinal_clearance": 3,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 10,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "bubble_5m",
+    "value": 250000,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 3,
+      "longitudinal_clearance": 3,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 10,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "bubble_5m",
+    "value": 360000,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 3,
+      "longitudinal_clearance": 3,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 10,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "long_gap",
+    "value": 200,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 3,
+      "longitudinal_clearance": 2,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 8,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "long_gap",
+    "value": 300,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 3,
+      "longitudinal_clearance": 3,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 10,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "long_gap",
+    "value": 400,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 3,
+      "longitudinal_clearance": 9,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 11,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "lat_clear",
+    "value": 75,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 2,
+      "longitudinal_clearance": 9,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 11,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "lat_clear",
+    "value": 100,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 3,
+      "longitudinal_clearance": 9,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 11,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "lat_clear",
+    "value": 150,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 4,
+      "longitudinal_clearance": 9,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 11,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "default_cap",
+    "value": 1562500,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 4,
+      "longitudinal_clearance": 9,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 11,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "default_cap",
+    "value": 1929321,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 4,
+      "longitudinal_clearance": 9,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 11,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "default_cap",
+    "value": 2500000,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 4,
+      "longitudinal_clearance": 9,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 11,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "wrong_way_min",
+    "value": 625,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 4,
+      "longitudinal_clearance": 9,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 11,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "wrong_way_min",
+    "value": 2500,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 4,
+      "longitudinal_clearance": 9,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 11,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "wrong_way_min",
+    "value": 10000,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 4,
+      "longitudinal_clearance": 9,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 11,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "worker_clear2",
+    "value": 22500,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 4,
+      "longitudinal_clearance": 9,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 11,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "worker_clear2",
+    "value": 90000,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 4,
+      "longitudinal_clearance": 9,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 11,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "worker_clear2",
+    "value": 360000,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 4,
+      "longitudinal_clearance": 9,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 11,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "min_score",
+    "value": 0.1,
+    "gt_fp": 9,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 19,
+      "longitudinal_clearance": 4,
+      "collision_avoidance": 32,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 10,
+      "collision_avoidance": 25,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "min_score",
+    "value": 0.3,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 3,
+      "longitudinal_clearance": 3,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 10,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "min_score",
+    "value": 0.5,
+    "gt_fp": 5,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 3,
+      "collision_avoidance": 17,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5,
+      "longitudinal_clearance": 1
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 6,
+      "collision_avoidance": 8,
+      "wrong_way": 2
+    }
+  },
+  {
+    "param": "min_score",
+    "value": 0.7,
+    "gt_fp": 4,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 3,
+      "collision_avoidance": 4,
+      "lane_keeping": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "collision_avoidance": 4,
+      "wrong_way": 2,
+      "longitudinal_clearance": 2
+    }
+  },
+  {
+    "param": "max_agents",
+    "value": 5,
+    "gt_fp": 7,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 3,
+      "collision_avoidance": 12,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5,
+      "lateral_clearance": 1
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 4,
+      "collision_avoidance": 9,
+      "wrong_way": 2
+    }
+  },
+  {
+    "param": "max_agents",
+    "value": 10,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 3,
+      "longitudinal_clearance": 2,
+      "collision_avoidance": 26,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 9,
+      "collision_avoidance": 14,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "max_agents",
+    "value": 20,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 3,
+      "longitudinal_clearance": 3,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 10,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  },
+  {
+    "param": "max_agents",
+    "value": 40,
+    "gt_fp": 8,
+    "pred_hit": 9,
+    "gt_counts": {
+      "uncontrolled_priority": 4,
+      "lateral_clearance": 3,
+      "longitudinal_clearance": 3,
+      "collision_avoidance": 27,
+      "lane_keeping": 5,
+      "unsafe_lane_change_gap": 5
+    },
+    "pred_counts": {
+      "lane_keeping": 22,
+      "sidewalk_encroachment": 3,
+      "lateral_clearance": 1,
+      "longitudinal_clearance": 10,
+      "collision_avoidance": 16,
+      "wrong_way": 2,
+      "uncontrolled_priority": 3
+    }
+  }
+]

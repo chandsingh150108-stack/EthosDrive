@@ -1,0 +1,53 @@
+{
+  "scenes": 10,
+  "extrapolated": false,
+  "warm_predictions": true,
+  "corrector_mode": "qp",
+  "horizon_s": 3,
+  "horizon_steps_pred": 4,
+  "l2_mean": 10.18409786653791,
+  "l2_values": [
+    7.784046083039549,
+    6.279495642698056,
+    2.393455360356566,
+    11.410197930952842,
+    2.3091016677162215,
+    21.312601368526096,
+    8.940046443367292,
+    24.654349010596803,
+    13.983637700578099,
+    2.7740474575475793
+  ],
+  "gt_safe_rate": 0.3,
+  "pred_safe_rate": 0.2,
+  "pred_fixed_rate": 0.5,
+  "gt_rule_counts": {
+    "unsafe_lane_change_gap": 6,
+    "uncontrolled_priority": 3,
+    "collision_avoidance": 24,
+    "lane_keeping": 5,
+    "longitudinal_clearance": 4,
+    "cut_in": 2,
+    "lateral_clearance": 1
+  },
+  "pred_rule_counts": {
+    "lane_keeping": 14,
+    "wrong_way": 3,
+    "sidewalk_encroachment": 2,
+    "longitudinal_clearance": 10,
+    "collision_avoidance": 9,
+    "unsafe_lane_change_gap": 1
+  },
+  "pred_rule_counts_measured_Tle3": {
+    "lane_keeping": 14,
+    "wrong_way": 3,
+    "sidewalk_encroachment": 2,
+    "longitudinal_clearance": 10,
+    "collision_avoidance": 9,
+    "unsafe_lane_change_gap": 1
+  },
+  "pred_rule_counts_extrapolated_Tge4": {},
+  "ms_planner_mean": 14221.771369944327,
+  "ms_checker_mean": 77.23813998745754,
+  "ms_corrector_mean": 3210.57006996125
+}

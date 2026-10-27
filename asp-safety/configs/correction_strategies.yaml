@@ -1,0 +1,30 @@
+# Correction strategy parameters (RQ-1).
+# Tunable without code changes. TrajectoryCorrector loads this file;
+# missing keys fall back to DEFAULT_PARAMS in correction_strategies.py.
+
+# Fallback speed target (m/s) when no map/zone limit is known.
+# 12.5 m/s = 45 km/h, i.e. 90% of the 50 km/h default cap.
+default_speed_target_ms: 12.5
+
+# Gentle slowdown factor for following-distance findings.
+follow_scale: 0.7
+
+# Boost factor for minimum-speed findings (R1.4).
+min_speed_boost: 1.1
+
+# Lateral shift (m) applied for collision/conflict findings.
+lateral_shift_m: 2.0
+
+# Comfort smoothing: blend factor toward neighbors' midpoint.
+smooth_blend: 0.25
+
+# Comfort smoothing at trajectory edges: damp factor.
+smooth_edge_dampen: 0.9
+
+# Fallback lane-center y (m) when no map lane matches the violation point.
+fallback_lane_center_y: 0.0
+
+# Per-group application cap per correct() call (P-6): bounds
+# single-strategy churn so the fixpoint tries other strategies
+# instead of spinning on one.
+group_cap: 40

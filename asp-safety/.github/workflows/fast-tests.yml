@@ -1,0 +1,34 @@
+# CI: fast suites only (no weights, no GPU, no dataset).
+#
+# The Clingo-backed suites (checker, corrector, rules, edges, performance,
+# evaluation, data_loader) run on placeholder paths. The S13-S17
+# ASP-constraint/QP suites (constraints, corrector_qp, pipeline correction)
+# are also torch-free and run here (T-14). Suites needing the 986 MB
+# SparseDrive checkpoint or CUDA (test_sparse_drive planner predict,
+# test_pipeline, test_all, calibration) are excluded here and run locally
+# in the conda `asp-safety` env (see docs/environment.md).
+name: fast-tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  fast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install deps
+        run: |
+          pip install clingo==5.7.1 numpy scipy pytest pyyaml
+      - name: Run fast suites
+        working-directory: asp-safety
+        run: |
+          pytest tests/test_checker.py tests/test_checker_edges.py \
+            tests/test_constraint_emission.py tests/test_corrector.py \
+            tests/test_data_loader.py tests/test_evaluation.py \
+            tests/test_performance.py tests/test_qp_feasibility.py \
+            tests/test_rules.py tests/test_t2_coverage.py -q
