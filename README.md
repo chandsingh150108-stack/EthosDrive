@@ -1,56 +1,197 @@
-# OpenCode Go Agentic Starter — usage-first, quality-second
+# ASP Safety Layer for Autonomous Vehicles
 
-This is a project-local starter kit for OpenCode Go. It is intentionally conservative: use a high-throughput model for routine work, invoke stronger coding/review models only when the task warrants it, and avoid wasteful multi-agent fan-out.
+An ASP-based safety layer that checks and corrects neural planner trajectories against formal traffic rules, reducing collision rate with minimal latency overhead.
 
-## Model routing
+## Project Overview
 
-| Job | Model in this kit | Why |
-|---|---|---|
-| Default conversation / ordinary edits | `opencode-go/mimo-v2.6-flash` | High-throughput default for everyday tasks |
-| Lightweight scouting and docs | `opencode-go/mimo-v2.6-flash` | Avoid spending specialist quota on reading/summarizing |
-| First-pass review and debugging | `opencode-go/deepseek-v4.1-flash` | Cheap first review before escalating |
-| Difficult implementation / deep review | `opencode-go/kimi-k2.7-code` | Specialist model; call intentionally |
-| Architecture decisions | `opencode-go/deepseek-v4-pro` | Reserve for genuinely consequential design choices |
+This project implements a safety layer for autonomous driving that:
+1. Takes trajectories from a neural planner (SparseDrive)
+2. Checks them against formal traffic rules using ASP (Answer Set Programming)
+3. Corrects violations if found
+4. Returns safe trajectories
 
-OpenCode Go model availability and quotas can change. Check `/models` after connecting Go. If any configured model is missing from your account/region, replace its ID with one shown by `/models`. Muse Spark has region limitations, so this kit does not depend on it.
+## Team
 
-## Install on Windows
+| Member | Role | Responsibilities |
+|--------|------|------------------|
+| Member 1 | Project Lead | Architecture, integration, coordination |
+| Member 2 | ASP Specialist | Rule implementation, Clingo integration |
+| Member 3 | Neural Planner | SparseDrive setup, inference pipeline |
+| Member 4 | Evaluation Lead | Testing, metrics, CARLA/nuScenes |
 
-1. Extract this ZIP into the **root of one project**. Merge the included `.opencode` folder with any existing `.opencode` folder; do not delete agents or commands you already have.
-2. Copy `AGENTS.md` into the project root. If you already have an `AGENTS.md`, merge the sections rather than overwriting your existing rules.
-3. If the project has no `opencode.json`, copy `opencode.go.example.jsonc` to `opencode.json`. If it already has one, **do not replace it**: merge only the `model` and `small_model` keys into it, preserving your existing permissions/providers/settings.
-4. Run OpenCode from that project and use `/models` to verify that the listed Go models are available.
+## Quick Start
 
-Example PowerShell commands after extracting the archive (adjust the path):
+### 1. Setup Environment
 
-```powershell
-cd "C:\path\to\your\project"
-# Start OpenCode after placing the files:
-opencode
+```bash
+# Run the setup script
+./setup_env.sh
+
+# Activate the environment
+conda activate asp-safety
 ```
 
-## Commands
+### 2. Clone SparseDrive
 
-- `/triage <task>` — inspect only relevant files and make a compact plan; no code edits.
-- `/verify <scope>` — run focused tests/checks and report exact outcomes.
-- `/review <scope>` — read-only first-pass review using a high-throughput model.
-- `/deep-review <scope>` — stronger read-only review for important/high-risk changes.
-- `/deep-fix <task>` — use the specialist coding model for a difficult implementation/fix.
-- `/docs <scope>` — update documentation based on verified repository behavior.
+```bash
+cd asp-safety
+git clone https://github.com/swc-17/SparseDrive.git
+cd SparseDrive
 
-You can also invoke agents directly: `@scout`, `@implementer`, `@reviewer`, `@architect`, `@debugger`, or `@docs-writer`.
+# Download pre-trained weights
+mkdir -p ckpt
+wget https://github.com/swc-17/SparseDrive/releases/download/v1.0/sparsedrive_stage2.pth \
+    -O ckpt/sparsedrive_stage2.pth
+```
 
-## Operating policy
+### 3. Download nuScenes Dataset
 
-- The cheapest suitable model is the default; stronger models are opt-in for difficult work.
-- Do not launch multiple agents by default. Use at most one focused scout/reviewer unless genuinely independent tasks justify parallel work.
-- Do not make agents read the entire repository for every task. Give them exact paths and load only necessary files.
-- Prefer a focused patch over a broad rewrite. Avoid opportunistic refactoring.
-- Run the smallest relevant test/check first, then expand verification when warranted.
-- A reviewer is read-only. The implementer must not claim tests passed unless they actually ran and passed.
-- Ask before destructive operations, dependency upgrades, schema changes, changing public APIs, or deleting user data.
-- Treat secrets, `.env` files, credentials, private keys, and tokens as off-limits. Never print them or include them in reports.
+1. Go to https://www.nuscenes.org/download
+2. Create an account and agree to terms
+3. Download the mini split for development
+4. Extract to `C:/data/sets/nuscenes` (Windows; override the
+   `data_dir` default on Linux). The map-expansion zip extracts as
+   `expansion/*.json` + `basemap/*.png`; copy both under `maps/`
+   (devkit layout — see `docs/environment.md`).
 
-## Important
+## Project Structure
 
-This is a starter kit, not a promise that a specific model will always be available or best on every task. Keep `/models` as the source of truth for your account and review the real diff/test output before accepting substantial changes.
+```
+asp-safety/
+├── README.md                 # This file
+├── requirements.txt          # Python dependencies
+├── setup_env.sh             # Environment setup script
+├── pyproject.toml           # Project metadata
+├── .github/workflows/       # CI (Clingo-only fast suites)
+├── configs/                 # Configuration files
+│   ├── default.yaml
+│   └── correction_strategies.yaml  # corrector tuning params
+├── rules/                   # ASP traffic rules (63-rule catalog, R1-R15)
+│   ├── helpers.lp           # shared predicates (in_lane, speed, arrival, ...)
+│   ├── speed_regulation.lp  # R1.1-R1.5
+│   ├── lane_discipline.lp   # R2.1-R2.5
+│   ├── following_behavior.lp# R3.1-R3.4
+│   ├── collision_avoidance.lp # R4.1-R4.5
+│   ├── traffic_control.lp   # R5.1-R5.5
+│   ├── right_of_way.lp      # R6.1-R6.5
+│   ├── turning_rules.lp     # R7.1-R7.5
+│   ├── overtaking.lp        # R8.1-R8.4
+│   ├── vru_safety.lp        # R9.1-R9.5
+│   ├── intersection_behavior.lp # R10.1-R10.4
+│   ├── emergency.lp         # R11.1-R11.4
+│   ├── comfort_quality.lp   # R12.1-R12.4
+│   ├── predictive_safety.lp # R13.1-R13.4
+│   ├── environmental.lp     # R14.1-R14.4
+│   ├── complex_interactions.lp # R15.1-R15.4
+│   └── basic.lp            # Aggregates all rules
+├── src/                     # Source code
+│   ├── __init__.py
+│   ├── checker.py           # ASP safety checker (+constraint emission)
+│   ├── corrector.py         # Trajectory fixpoint engine (+CorrectorQP)
+│   ├── constraint_optimizer.py # projected-gradient QP on ASP bounds
+│   ├── correction_strategies.py # rule->strategy dispatch table
+│   ├── neural_planner.py    # SparseDrive wrapper (+temporal API)
+│   ├── data_loader.py       # nuScenes loading + real map extraction
+│   ├── evaluation.py        # Metrics calculation
+│   ├── pipeline.py          # End-to-end pipeline
+│   └── utils.py             # Utility functions
+├── experiments/             # Harnesses (calibration, replay, ablations)
+│   ├── run_evaluation.py    # placeholder batch demo
+│   ├── run_calibration.py   # real-data baseline + trajectory dumps
+│   ├── run_temporal.py      # warm-vs-cold harness
+│   ├── replay_eval.py       # tracked-annotation replay baseline
+│   ├── cmd_sweep.py         # nav-command semantics probe
+│   ├── sweep_thresholds.py  # GPU-free threshold sweeps
+│   ├── ablate_corrector.py  # corrector/QP bound-family ablation
+│   ├── sweep_qp_params.py   # QP optimizer 12-combo sweep
+│   ├── cap_ab.py            # map-tile cap A/B probe
+│   ├── carla_launch.py      # CARLA server lifecycle (S12)
+│   ├── carla_probe.py       # 6-cam rig + projection sanity (P25-A)
+│   ├── carla_context.py     # CARLA facts -> checker context (P25-B)
+│   ├── carla_bridge.py      # closed-loop shield bridge (P25-B/D)
+│   ├── carla_scenarios.py   # S1-S5 scripted scenarios (P25-D)
+│   ├── run_closed_loop.py   # scenario runner CLI (P25-D)
+│   ├── carla_sign_test.py   # steer-sign calibration probe
+│   ├── carla_metrics.py     # frozen-matrix aggregator (P25-C)
+│   ├── sign_test.py         # steering sign harness
+│   └── coverage_probe.py    # registry tripwire helper
+├── tests/                   # Unit tests (120 green)
+│   ├── test_all.py
+│   ├── test_checker.py
+│   ├── test_checker_edges.py
+│   ├── test_constraint_emission.py
+│   ├── test_corrector.py
+│   ├── test_data_loader.py
+│   ├── test_evaluation.py
+│   ├── test_performance.py
+│   ├── test_pipeline.py
+│   ├── test_qp_feasibility.py
+│   ├── test_rules.py
+│   ├── test_sparse_drive.py
+│   └── test_t2_coverage.py
+├── docs/                    # Documentation
+│   ├── usage.md
+│   ├── api_reference.md
+│   ├── conventions.md       # units/contracts reference
+│   ├── rule_divergences.md  # spec-vs-impl log
+│   ├── data_contracts.md
+│   ├── sparsedrive_integration.md
+│   ├── testdoc.md
+│   ├── test_coverage.md     # suite-by-suite coverage map
+│   ├── environment.md       # canonical env record
+│   ├── carla_harness.md     # CARLA closed-loop deviations ledger
+│   └── replay_eval_design.md
+└── SparseDrive/             # SparseDrive model (cloned)
+```
+
+## Status
+
+CARLA closed-loop pilot complete (2026-10-22, P-25, S19-S22):
+6-camera bridge, S1-S5 scripted scenarios, frozen 15-run matrix
+(5 scenarios x off/heuristic/qp) with
+`experiments/carla_metrics.json` — the two adversarial unshielded
+arms collide (13.3% collision rate) while every shielded arm
+survives (0 collisions, 0 give-ups); deviations ledger in
+`docs/carla_harness.md`. ASP-constrained correction track complete
+(2026-10-03, S13-S17): constraint emission in all 15 rule files,
+`check(include_constraints=True)`, pure-NumPy QP corrector
+(`CorrectorQP`), pipeline `corrector_mode`, bound-family +
+param-sweep ablations. 120 tests green, 63-rule catalog with 73/73
+firing coverage, warm calibration baseline (L2 10.18 m vs 11.54 m
+cold; GT 0.3 / pred 0.2 / fixed 0.5). Details: `whatodo.md`,
+`session.md`, `futuretodoist.md`. Targets below are design goals,
+not claims — measured values live in `experiments/` verdicts and
+JSONs.
+
+## Timeline
+
+Done: environment + SparseDrive integration, 63-rule catalog,
+checker/corrector/pipeline, real-data calibration, coverage battery,
+ASP-constrained QP correction track (S13-S17), CARLA closed-loop
+pilot (bridge + scenarios + frozen matrix, S19-S22). Remaining:
+horizon-joint QP work (P-23) and scaling the CARLA pilot beyond the
+single-seed 15-run matrix.
+
+## Evaluation Metrics
+
+| Metric | Definition | Target |
+|--------|------------|--------|
+| Collision Rate | % of trajectories with collisions | <0.05% |
+| L2 Error | Average displacement error | <0.7m |
+| Inference Time | Time per trajectory check | <50ms |
+| Violation Detection Rate | % of true violations detected | >90% |
+
+## Resources
+
+- **SparseDrive**: https://github.com/swc-17/SparseDrive
+- **nuScenes**: https://www.nuscenes.org/
+- **Clingo (ASP Solver)**: https://potassco.org/clingo/
+- **CARLA Simulator**: https://carla.org/ (optional)
+
+## License
+
+This project is for educational purposes (course project).
+
+---
+
+*Last Updated: October 22, 2026*
