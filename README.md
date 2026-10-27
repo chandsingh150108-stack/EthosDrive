@@ -163,24 +163,6 @@ cold; GT 0.3 / pred 0.2 / fixed 0.5). Details: `whatodo.md`,
 not claims — measured values live in `experiments/` verdicts and
 JSONs.
 
-## Timeline
-
-Done: environment + SparseDrive integration, 63-rule catalog,
-checker/corrector/pipeline, real-data calibration, coverage battery,
-ASP-constrained QP correction track (S13-S17), CARLA closed-loop
-pilot (bridge + scenarios + frozen matrix, S19-S22). Remaining:
-horizon-joint QP work (P-23) and scaling the CARLA pilot beyond the
-single-seed 15-run matrix.
-
-## Evaluation Metrics
-
-| Metric | Definition | Target |
-|--------|------------|--------|
-| Collision Rate | % of trajectories with collisions | <0.05% |
-| L2 Error | Average displacement error | <0.7m |
-| Inference Time | Time per trajectory check | <50ms |
-| Violation Detection Rate | % of true violations detected | >90% |
-
 ## Resources
 
 - **SparseDrive**: https://github.com/swc-17/SparseDrive
