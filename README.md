@@ -10,14 +10,6 @@ This project implements a safety layer for autonomous driving that:
 3. Corrects violations if found
 4. Returns safe trajectories
 
-## Team
-
-| Member | Role | Responsibilities |
-|--------|------|------------------|
-| Member 1 | Project Lead | Architecture, integration, coordination |
-| Member 2 | ASP Specialist | Rule implementation, Clingo integration |
-| Member 3 | Neural Planner | SparseDrive setup, inference pipeline |
-| Member 4 | Evaluation Lead | Testing, metrics, CARLA/nuScenes |
 
 ## Quick Start
 
